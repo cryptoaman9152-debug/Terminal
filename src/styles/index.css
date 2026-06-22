@@ -1,0 +1,449 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* FundedWealth Dark — Premium institutional theme */
+  --fw-bg: #0f1118;
+  --fw-surface: #181b25;
+  --fw-surface-2: #1e2230;
+  --fw-border: #262a36;
+  --fw-border-light: #2f3444;
+  --fw-text: #e1e4eb;
+  --fw-text-secondary: #6b7280;
+  --fw-text-muted: #4b5060;
+  --fw-accent: #3b82f6;
+  --fw-accent-hover: #2563eb;
+  --fw-green: #22c55e;
+  --fw-green-dim: rgba(34, 197, 94, 0.12);
+  --fw-red: #ef4444;
+  --fw-red-dim: rgba(239, 68, 68, 0.12);
+  --fw-panel: #181b25;
+  --fw-hover: #1f2332;
+  --fw-selected: #252a3a;
+  --fw-yellow: #f59e0b;
+  --fw-cyan: #06b6d4;
+  --fw-purple: #8b5cf6;
+  --fw-orange: #f97316;
+}
+
+[data-theme='fw-blue'] {
+  --fw-bg: #131722;
+  --fw-surface: #1e222d;
+  --fw-surface-2: #252a37;
+  --fw-border: #2a2e39;
+  --fw-border-light: #363a45;
+  --fw-text: #d1d4dc;
+  --fw-text-secondary: #787b86;
+  --fw-text-muted: #5d606b;
+  --fw-accent: #2962ff;
+  --fw-accent-hover: #1e50e6;
+  --fw-green: #26a69a;
+  --fw-green-dim: rgba(38, 166, 154, 0.12);
+  --fw-red: #ef5350;
+  --fw-red-dim: rgba(239, 83, 80, 0.12);
+  --fw-panel: #1e222d;
+  --fw-hover: #2a2e39;
+  --fw-selected: #323741;
+  --fw-yellow: #f59e0b;
+  --fw-cyan: #06b6d4;
+  --fw-purple: #7c3aed;
+  --fw-orange: #f97316;
+}
+
+[data-theme='light'] {
+  /* Light variant replaced with deeper dark alternate — prop firm terminal stays dark */
+  --fw-bg: #0c0e16;
+  --fw-surface: #141620;
+  --fw-surface-2: #1a1c28;
+  --fw-border: #222433;
+  --fw-border-light: #2c2f40;
+  --fw-text: #dce0e8;
+  --fw-text-secondary: #6e7280;
+  --fw-text-muted: #4a4f5c;
+  --fw-accent: #3b82f6;
+  --fw-accent-hover: #2563eb;
+  --fw-green: #10b981;
+  --fw-green-dim: rgba(16, 185, 129, 0.10);
+  --fw-red: #ef4444;
+  --fw-red-dim: rgba(239, 68, 68, 0.10);
+  --fw-panel: #141620;
+  --fw-hover: #1c1f2c;
+  --fw-selected: #202436;
+  --fw-yellow: #f59e0b;
+  --fw-cyan: #06b6d4;
+  --fw-purple: #7c3aed;
+  --fw-orange: #ea580c;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--fw-bg);
+  color: var(--fw-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tabular nums for all monospace data */
+.tabular-nums {
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}
+
+/* Scrollbar styles - ultra slim */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--fw-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--fw-text-secondary);
+}
+
+/* Hide scrollbar utility */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom utilities */
+@layer utilities {
+  .text-green {
+    color: var(--fw-green);
+  }
+  .text-red {
+    color: var(--fw-red);
+  }
+  .bg-green {
+    background-color: var(--fw-green);
+  }
+  .bg-red {
+    background-color: var(--fw-red);
+  }
+  .bg-green-dim {
+    background-color: var(--fw-green-dim);
+  }
+  .bg-red-dim {
+    background-color: var(--fw-red-dim);
+  }
+}
+
+/* Brand fade-in animation */
+@keyframes brandFadeIn {
+  from { opacity: 0; transform: translateY(-3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+header [data-brand] {
+  animation: brandFadeIn 0.5s ease-out both;
+}
+
+/* Premium Table styles */
+.fw-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.fw-table th {
+  text-align: left;
+  padding: 8px 12px;
+  color: var(--fw-text-secondary);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--fw-border);
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  background: var(--fw-surface);
+  z-index: 1;
+}
+
+.fw-table td {
+  padding: 8px 12px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--fw-border);
+  white-space: nowrap;
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}
+
+.fw-table tr:hover td {
+  background-color: var(--fw-hover);
+}
+
+.fw-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Input styles */
+.fw-input {
+  background-color: var(--fw-bg);
+  border: 1px solid var(--fw-border);
+  color: var(--fw-text);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.fw-input:focus {
+  border-color: var(--fw-accent);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+/* Button styles */
+.fw-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: none;
+  outline: none;
+}
+
+.fw-btn-buy {
+  background-color: var(--fw-green);
+  color: white;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25);
+}
+
+.fw-btn-buy:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.35);
+}
+
+.fw-btn-sell {
+  background-color: var(--fw-red);
+  color: white;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+}
+
+.fw-btn-sell:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+}
+
+.fw-btn-primary {
+  background-color: var(--fw-accent);
+  color: white;
+}
+
+.fw-btn-primary:hover {
+  background-color: var(--fw-accent-hover);
+}
+
+/* KPI Card */
+.kpi-card {
+  background: var(--fw-surface-2);
+  border: 1px solid var(--fw-border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  transition: border-color 0.2s;
+}
+
+.kpi-card:hover {
+  border-color: var(--fw-border-light);
+}
+
+/* Context Menu */
+.context-menu {
+  position: fixed;
+  z-index: 1000;
+  background: var(--fw-surface);
+  border: 1px solid var(--fw-border);
+  border-radius: 8px;
+  padding: 4px;
+  min-width: 180px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+  animation: contextMenuFadeIn 0.12s ease-out;
+}
+
+.context-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--fw-text);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.context-menu-item:hover {
+  background: var(--fw-hover);
+}
+
+.context-menu-separator {
+  height: 1px;
+  background: var(--fw-border);
+  margin: 4px 8px;
+}
+
+@keyframes contextMenuFadeIn {
+  from { opacity: 0; transform: scale(0.95) translateY(-4px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Pulse animation for live data */
+@keyframes pricePulse {
+  0% { background-color: transparent; }
+  50% { background-color: var(--fw-green-dim); }
+  100% { background-color: transparent; }
+}
+
+@keyframes priceFlashRed {
+  0% { background-color: transparent; }
+  50% { background-color: var(--fw-red-dim); }
+  100% { background-color: transparent; }
+}
+
+@keyframes priceFlashGreen {
+  0% { background-color: transparent; }
+  50% { background-color: var(--fw-green-dim); }
+  100% { background-color: transparent; }
+}
+
+/* Drag resize handle */
+.resize-handle {
+  position: absolute;
+  background: transparent;
+  transition: background 0.15s;
+}
+
+.resize-handle:hover {
+  background: var(--fw-accent);
+}
+
+/* Progress bar */
+.progress-bar {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--fw-border);
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+
+/* Mobile & Responsive Scaling */
+@media (max-width: 1280px) {
+  header [data-brand] {
+    max-width: 140px;
+  }
+}
+
+@media (max-width: 1024px) {
+  header [data-brand] {
+    max-width: 100px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Stack panels vertically on small screens */
+  html, body, #root {
+    overflow: auto;
+  }
+
+  .fw-table th,
+  .fw-table td {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+}
+
+/* Prevent content bleed between panels */
+.panel-no-bleed {
+  contain: layout style;
+  isolation: isolate;
+}
+
+/* Hide lightweight-charts watermark on sub-chart panes (Volume/RSI/MACD).
+   Main chart retains TradingView attribution as required by license. */
+.h-\\[60px\\] .tv-lightweight-charts:after,
+.h-\\[80px\\] .tv-lightweight-charts:after,
+[class*="min-h-\\[60px\\]"] canvas + div,
+[class*="min-h-\\[80px\\]"] canvas + div {
+  display: none !important;
+}
+
+/* Slide up animation for modals/toasts */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.2s ease-out;
+}
+
+/* Toast container styles injected by JS */
+#fw-toast-container > div {
+  animation: slideIn 0.2s ease-out;
+}
+
+/* Toast slide-in animation */
+@keyframes slideInFromRight {
+  from { opacity: 0; transform: translateX(100%); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-in {
+  animation-fill-mode: both;
+}
+
+.slide-in-from-right {
+  animation-name: slideInFromRight;
+}
+
+.fade-in {
+  animation-name: slideInFromRight;
+}
+
+/* Safe area for mobile bottom nav */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
