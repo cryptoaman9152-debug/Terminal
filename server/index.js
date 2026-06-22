@@ -162,17 +162,21 @@ app.use('/api/orders', orderLimiter);
 // Serve frontend static files in production
 if (process.env.NODE_ENV === 'production') {
   const { default: path } = await import('path');
+  const { default: fs } = await import('fs');
   const { fileURLToPath } = await import('url');
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const distPath = path.resolve(__dirname, '../dist');
-  app.use(express.static(distPath));
-  app.get('*', (req, res, next) => {
-    // Don't serve index.html for API/auth/health routes
-    if (req.path.startsWith('/api') || req.path.startsWith('/auth') || req.path.startsWith('/health') || req.path.startsWith('/ws')) {
-      return next();
-    }
-    res.sendFile(path.join(distPath, 'index.html'));
-  });
+  const distExists = fs.existsSync(distPath);
+  if (distExists) {
+    app.use(express.static(distPath));
+    app.get('*', (req, res, next) => {
+      // Don't serve index.html for API/auth/health routes
+      if (req.path.startsWith('/api') || req.path.startsWith('/auth') || req.path.startsWith('/health') || req.path.startsWith('/ws')) {
+        return next();
+      }
+      res.sendFile(path.join(distPath, 'index.html'));
+    });
+  }
 }
 
 // Global error handler — prevents stack trace leaks
