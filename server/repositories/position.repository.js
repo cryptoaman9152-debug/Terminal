@@ -48,7 +48,6 @@ export class PositionRepository extends BaseRepository {
       .eq('user_id', accountId)
       .eq('symbol', token)
       .eq('status', 'open')
-      .single();
       .is('closed_at', null)
       .single();
 
