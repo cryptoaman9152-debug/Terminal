@@ -17,7 +17,7 @@ export class TradeRepository extends BaseRepository {
     let query = this.db
       .from(this.tableName)
       .select('*')
-      .eq('account_id', accountId)
+      .eq('user_id', accountId)
       .order('executed_at', { ascending: false });
 
     if (options.limit) {
@@ -36,7 +36,7 @@ export class TradeRepository extends BaseRepository {
     const { data, error } = await this.db
       .from(this.tableName)
       .select('*')
-      .eq('account_id', accountId)
+      .eq('user_id', accountId)
       .gte('executed_at', today.toISOString())
       .order('executed_at', { ascending: false });
 
@@ -69,7 +69,7 @@ export class TradeRepository extends BaseRepository {
     const { data, error } = await this.db
       .from(this.tableName)
       .select('*')
-      .eq('account_id', accountId)
+      .eq('user_id', accountId)
       .gte('executed_at', from.toISOString())
       .order('executed_at', { ascending: false });
 
@@ -79,12 +79,9 @@ export class TradeRepository extends BaseRepository {
 
   async recordTrade(accountId, orderId, params) {
     const result = await this.insert({
-      account_id: accountId,
+      user_id: accountId,
       order_id: orderId,
       symbol: params.symbol,
-      token: params.token,
-      segment: params.segment,
-      exchange: params.exchange || params.segment,
       side: params.side,
       qty: params.qty,
       price: params.price,
@@ -113,8 +110,8 @@ export class TradeRepository extends BaseRepository {
 
     const { data, error } = await this.db
       .from(this.tableName)
-      .select('side, qty, price, symbol, token')
-      .eq('account_id', accountId)
+      .select('side, qty, price, symbol')
+      .eq('user_id', accountId)
       .gte('executed_at', today.toISOString())
       .order('executed_at', { ascending: true });
 
@@ -129,7 +126,7 @@ export class TradeRepository extends BaseRepository {
     const { count, error } = await this.db
       .from(this.tableName)
       .select('id', { count: 'exact', head: true })
-      .eq('account_id', accountId)
+      .eq('user_id', accountId)
       .gte('executed_at', today.toISOString());
 
     if (error) throw new Error(`[trades] countTodayTrades failed: ${error.message}`);

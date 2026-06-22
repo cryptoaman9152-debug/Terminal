@@ -155,19 +155,19 @@ export class AccountService {
     const { data, error } = await supabase
       .from('positions')
       .select('*')
-      .eq('account_id', accountId)
-      .is('closed_at', null);
+      .eq('user_id', accountId)
+      .eq('status', 'open');
 
     if (error || !data) {
       return [];
     }
 
     return data.map(p => {
-      const q = this.marketDataEngine.getQuote(p.token);
-      const ltp = q?.ltp || p.avg_price;
+      const q = this.marketDataEngine.getQuote(p.symbol);
+      const ltp = q?.ltp || p.entry_price;
       const pnl = p.qty > 0
-        ? (ltp - p.avg_price) * p.qty
-        : (p.avg_price - ltp) * Math.abs(p.qty);
+        ? (ltp - p.entry_price) * p.qty
+        : (p.entry_price - ltp) * Math.abs(p.qty);
       return { ...p, ltp, pnl, mtm: pnl };
     });
   }
@@ -179,8 +179,8 @@ export class AccountService {
     const { data, error } = await supabase
       .from('trading_orders')
       .select('*')
-      .eq('account_id', accountId)
-      .order('placed_at', { ascending: false });
+      .eq('challenge_account_id', accountId)
+      .order('created_at', { ascending: false });
 
     if (error || !data) {
       return [];
@@ -195,7 +195,7 @@ export class AccountService {
     let query = supabase
       .from('executions')
       .select('*')
-      .eq('account_id', accountId)
+      .eq('user_id', accountId)
       .order('executed_at', { ascending: false });
 
     if (period) {

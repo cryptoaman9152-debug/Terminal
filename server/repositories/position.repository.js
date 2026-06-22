@@ -17,8 +17,8 @@ export class PositionRepository extends BaseRepository {
     const { data, error } = await this.db
       .from(this.tableName)
       .select('*')
-      .eq('account_id', accountId)
-      .is('closed_at', null)
+      .eq('user_id', accountId)
+      .eq('status', 'open')
       .order('opened_at', { ascending: false });
 
     if (error) throw new Error(`[positions] findOpenByAccountId failed: ${error.message}`);
@@ -29,7 +29,7 @@ export class PositionRepository extends BaseRepository {
     let query = this.db
       .from(this.tableName)
       .select('*')
-      .eq('account_id', accountId)
+      .eq('user_id', accountId)
       .order('opened_at', { ascending: false });
 
     if (options.limit) {
@@ -45,9 +45,10 @@ export class PositionRepository extends BaseRepository {
     const { data, error } = await this.db
       .from(this.tableName)
       .select('*')
-      .eq('account_id', accountId)
-      .eq('token', token)
-      .eq('product_type', productType)
+      .eq('user_id', accountId)
+      .eq('symbol', token)
+      .eq('status', 'open')
+      .single();
       .is('closed_at', null)
       .single();
 
@@ -72,16 +73,16 @@ export class PositionRepository extends BaseRepository {
         // Adding to position
         const addQty = params.side === 'BUY' ? params.qty : -params.qty;
         newQty = existing.qty + addQty;
-        newAvgPrice = ((existing.avg_price * Math.abs(existing.qty)) + (params.price * params.qty)) /
+        newAvgPrice = ((existing.entry_price * Math.abs(existing.qty)) + (params.price * params.qty)) /
                       (Math.abs(existing.qty) + params.qty);
-        realizedPnl = existing.realized_pnl;
+        realizedPnl = existing.pnl;
       } else {
         // Reducing or reversing position
         const closeQty = Math.min(params.qty, Math.abs(existing.qty));
         const pnlPerUnit = existing.qty > 0
-          ? (params.price - existing.avg_price)
-          : (existing.avg_price - params.price);
-        realizedPnl = (existing.realized_pnl || 0) + (pnlPerUnit * closeQty);
+          ? (params.price - existing.entry_price)
+          : (existing.entry_price - params.price);
+        realizedPnl = (existing.pnl || 0) + (pnlPerUnit * closeQty);
 
         const remainingQty = Math.abs(existing.qty) - closeQty;
         const excessQty = params.qty - closeQty;
@@ -90,7 +91,9 @@ export class PositionRepository extends BaseRepository {
           // Position fully closed
           const result = await this.update(existing.id, {
             qty: 0,
-            realized_pnl: realizedPnl,
+            pnl: realizedPnl,
+            exit_price: params.price,
+            status: 'closed',
             closed_at: new Date().toISOString(),
           });
 
@@ -100,7 +103,7 @@ export class PositionRepository extends BaseRepository {
             token: existing.token,
             qty: 0,
             pnl: realizedPnl,
-            avgPrice: existing.avg_price,
+            avgPrice: existing.entry_price,
             status: 'closed',
           }, { accountId });
 
@@ -108,7 +111,7 @@ export class PositionRepository extends BaseRepository {
         } else if (remainingQty > 0) {
           // Position reduced
           newQty = existing.qty > 0 ? remainingQty : -remainingQty;
-          newAvgPrice = existing.avg_price;
+          newAvgPrice = existing.entry_price;
         } else {
           // Position reversed
           newQty = params.side === 'BUY' ? excessQty : -excessQty;
@@ -118,8 +121,8 @@ export class PositionRepository extends BaseRepository {
 
       const result = await this.update(existing.id, {
         qty: newQty,
-        avg_price: Math.round(newAvgPrice * 100) / 100,
-        realized_pnl: Math.round((realizedPnl || 0) * 100) / 100,
+        entry_price: Math.round(newAvgPrice * 100) / 100,
+        pnl: Math.round((realizedPnl || 0) * 100) / 100,
       });
 
       // Publish position.updated

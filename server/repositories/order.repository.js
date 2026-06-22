@@ -106,9 +106,9 @@ export class OrderRepository extends BaseRepository {
     const { count, error } = await this.db
       .from(this.tableName)
       .select('id', { count: 'exact', head: true })
-      .eq('account_id', accountId)
+      .eq('challenge_account_id', accountId)
       .eq('status', 'FILLED')
-      .gte('placed_at', today.toISOString());
+      .gte('created_at', today.toISOString());
 
     if (error) throw new Error(`[orders] countTodayTrades failed: ${error.message}`);
     return count || 0;
