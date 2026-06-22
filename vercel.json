@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://terminal-yhvc.onrender.com/api/:path*" },
+    { "source": "/auth/:path*", "destination": "https://terminal-yhvc.onrender.com/auth/:path*" },
+    { "source": "/health", "destination": "https://terminal-yhvc.onrender.com/health" }
+  ]
+}
