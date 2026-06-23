@@ -21,7 +21,7 @@ import { isSessionValid } from '../services/session.service.js';
  */
 export function requireAuth(req, res, next) {
   // Dev bypass: if DEV_BYPASS_AUTH is set, allow through with dev user context
-  if (process.env.NODE_ENV !== 'production' && process.env.DEV_BYPASS_AUTH === 'true') {
+  if (process.env.DEV_BYPASS_AUTH === 'true') {
     req.user = {
       userId: 'dev-user',
       accountId: 'dev-account',
