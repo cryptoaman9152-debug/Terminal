@@ -1,8 +1,8 @@
 {
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://terminal-yhvc.onrender.com/api/:path*" },
-    { "source": "/auth/:path*", "destination": "https://terminal-yhvc.onrender.com/auth/:path*" },
-    { "source": "/health", "destination": "https://terminal-yhvc.onrender.com/health" },
-    { "source": "/ws/:path*", "destination": "https://terminal-yhvc.onrender.com/ws/:path*" }
+    { "source": "/api/:path*", "destination": "https://terminal-production-4429.up.railway.app/api/:path*" },
+    { "source": "/auth/:path*", "destination": "https://terminal-production-4429.up.railway.app/auth/:path*" },
+    { "source": "/health", "destination": "https://terminal-production-4429.up.railway.app/health" },
+    { "source": "/ws/:path*", "destination": "https://terminal-production-4429.up.railway.app/ws/:path*" }
   ]
 }
