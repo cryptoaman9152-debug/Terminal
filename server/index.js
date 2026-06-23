@@ -44,7 +44,7 @@ import { AngelFeedConnector } from './brokers/angelone/angel.feed.connector.js';
 import { eventBus, EventBridge } from './events/index.js';
 import { eventDispatcher } from './services/eventDispatcher.js';
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 8080;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 
 // ─── Initialize Services ─────────────────────────────────────────
@@ -110,23 +110,12 @@ const orderLimiter = rateLimit({
 app.use('/api', apiLimiter);
 app.use('/auth', authLimiter);
 
-// Health check (no auth)
-app.get('/health', async (req, res) => {
-  const dbStatus = await testConnection();
-  const mdeStatus = marketDataEngine.getStatus();
-  const feedStatus = angelFeed.getStatus();
-  const sioStatus = realtimeServer ? realtimeServer.getStatus() : { clients: 0, rooms: 0, subscriptions: 0 };
-  res.json({
+// Health check (no auth) — lightweight, no DB queries, for Railway health monitoring
+app.get('/health', (req, res) => {
+  res.status(200).json({
     status: 'ok',
     timestamp: new Date().toISOString(),
-    database: dbStatus,
-    marketData: mdeStatus,
-    feed: feedStatus,
-    socketIO: sioStatus,
-    eventBus: eventBus.getMetrics(),
-    eventBridge: eventBridge.getStats(),
-    eventDispatcher: eventDispatcher.getStats(),
-    uptime: process.uptime(),
+    uptime: Math.floor(process.uptime()),
   });
 });
 
